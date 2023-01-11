@@ -1,18 +1,22 @@
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonInput, IonItem, IonLabel, IonList, IonButton, useIonToast } from '@ionic/react';
+import {SetStateAction, useState} from 'react'
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonInput, IonItem, IonLabel, IonList, IonButton, useIonToast, IonText} from '@ionic/react';
 import { getElement } from 'ionicons/dist/types/stencil-public-runtime';
 import ExploreContainer from '../components/ExploreContainer';
 import './Home.css';
 
 const Home: React.FC = () => {
-  const [present] = useIonToast();
+  const [id, setButtonId] = useState('');
+  const [mdp, setButtonMdp] = useState('');
 
-  const presentToast = () => {
-    present({
-      message: 'Hello World!',
-      duration: 1500,
-      position: 'bottom'
-    });
-  };
+  function handleInputId(event: { target: any; }) {
+    setButtonId(event.target.value);
+    console.log(id);
+  }
+
+  function handleInputMdp(event: { target: any; }) {
+    setButtonMdp(event.target.value);
+    console.log(mdp);
+  }
 
   return (
     <IonPage>
@@ -30,20 +34,49 @@ const Home: React.FC = () => {
         <ExploreContainer />
         <IonItem>
           <IonLabel id="labelId" position="floating">Nom d'utilisateur :</IonLabel>
-          <IonInput clearInput={true} id="id"></IonInput>
+          <IonInput clearInput={true} id="id" name="id" onIonChange={handleInputId}></IonInput>
         </IonItem>
         <IonItem>
           <IonLabel id="labelPw" position="floating">Mot de passe :</IonLabel>
-          <IonInput clearInput={true} type="password" id="pw"></IonInput>
+          <IonInput clearInput={true} type="password" id="pw" onIonChange={handleInputMdp}></IonInput>
         </IonItem>
-        <IonItem>
-          <IonButton color="success" shape="round" expand='block' onClick={() => presentToast()}>
-            Connection
-          </IonButton>
-        </IonItem>
+        <ConnectionButton testid={id} testmdp={mdp} />
       </IonContent>
     </IonPage>
   );  
 };
+
+function ConnectionButton(props: { testid: string; testmdp: string; }) {
+  const [present] = useIonToast();
+  const message = "Id : "+props.testid+" --- mdp : "+props.testmdp;
+  const fauxBonId = "ouioui";
+  const fauxBonMdp = "taxi";
+  const [hidden,setHidden] = useState(true);
+
+  const presentToast = () => {
+    present({
+      message: message,
+      duration: 1500,
+      position: 'bottom'
+    });
+    if (fauxBonId!=props.testid || fauxBonMdp!=props.testmdp){
+      setHidden(false);
+    } else {
+      setHidden(true);
+    }
+    console.log(hidden);
+  };
+
+  return(
+    <IonItem>
+      <IonButton color="success" shape="round" expand='block' onClick={() => presentToast()}>
+        Connection
+      </IonButton>
+      <IonText color="danger" hidden={hidden}>
+        Compte invalide
+      </IonText>
+    </IonItem>
+  );
+}
 
 export default Home;
