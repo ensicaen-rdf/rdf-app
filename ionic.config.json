@@ -1,0 +1,7 @@
+{
+  "name": "RDF_CSSE",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react"
+}
