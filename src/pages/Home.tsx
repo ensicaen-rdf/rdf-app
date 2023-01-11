@@ -1,8 +1,19 @@
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonInput, IonItem, IonLabel, IonList, IonButton } from '@ionic/react';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonInput, IonItem, IonLabel, IonList, IonButton, useIonToast } from '@ionic/react';
+import { getElement } from 'ionicons/dist/types/stencil-public-runtime';
 import ExploreContainer from '../components/ExploreContainer';
 import './Home.css';
 
 const Home: React.FC = () => {
+  const [present] = useIonToast();
+
+  const presentToast = () => {
+    present({
+      message: 'Hello World!',
+      duration: 1500,
+      position: 'bottom'
+    });
+  };
+
   return (
     <IonPage>
       <IonHeader>
@@ -26,7 +37,9 @@ const Home: React.FC = () => {
           <IonInput clearInput={true} type="password" id="pw"></IonInput>
         </IonItem>
         <IonItem>
-          <IonButton>Connection</IonButton>
+          <IonButton color="success" shape="round" expand='block' onClick={() => presentToast()}>
+            Connection
+          </IonButton>
         </IonItem>
       </IonContent>
     </IonPage>
