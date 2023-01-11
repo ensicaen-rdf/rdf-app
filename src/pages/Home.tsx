@@ -3,6 +3,7 @@ import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonInput, IonItem
 import { getElement } from 'ionicons/dist/types/stencil-public-runtime';
 import ExploreContainer from '../components/ExploreContainer';
 import './Home.css';
+import { Link } from 'react-router-dom';
 
 const Home: React.FC = () => {
   const [id, setButtonId] = useState('');
@@ -63,6 +64,7 @@ function ConnectionButton(props: { testid: string; testmdp: string; }) {
       setHidden(false);
     } else {
       setHidden(true);
+      return(<Link to="/profile" ></Link>);
     }
     console.log(hidden);
   };
@@ -77,6 +79,10 @@ function ConnectionButton(props: { testid: string; testmdp: string; }) {
       </IonText>
     </IonItem>
   );
+}
+
+function api() {
+
 }
 
 export default Home;
