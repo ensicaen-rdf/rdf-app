@@ -1,4 +1,4 @@
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonInput, IonItem, IonLabel, IonList } from '@ionic/react';
 import ExploreContainer from '../components/ExploreContainer';
 import './Home.css';
 
@@ -7,7 +7,7 @@ const Home: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Blank</IonTitle>
+          <IonTitle>Connection</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
@@ -17,6 +17,14 @@ const Home: React.FC = () => {
           </IonToolbar>
         </IonHeader>
         <ExploreContainer />
+        <IonItem>
+          <IonLabel id="labelId" position="floating">Nom d'utilisateur :</IonLabel>
+          <IonInput clearInput={true} id="id"></IonInput>
+        </IonItem>
+        <IonItem>
+          <IonLabel id="labelPw" position="floating">Mot de passe :</IonLabel>
+          <IonInput clearInput={true} type="password" id="pw"></IonInput>
+        </IonItem>
       </IonContent>
     </IonPage>
   );
