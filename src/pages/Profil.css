@@ -7,6 +7,12 @@ ion-card {
     margin-top: 30px
 }
 
+.validate {
+    margin-top: auto;
+    margin-left: auto;
+    margin-right: auto
+}
+
 .center {
     margin-left: auto;
     margin-right: auto;

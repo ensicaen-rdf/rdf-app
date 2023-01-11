@@ -1,4 +1,4 @@
-import { IonAvatar, IonBackButton, IonButton, IonButtons, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonContent, IonFab, IonFabButton, IonFabList, IonHeader, IonIcon, IonInfiniteScroll, IonInfiniteScrollContent, IonItem, IonLabel, IonList, IonModal, IonPage, IonTitle, IonToolbar } from '@ionic/react';
+import { IonAvatar, IonBackButton, IonButton, IonButtons, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonContent, IonFab, IonFabButton, IonFabList, IonHeader, IonIcon, IonInfiniteScroll, IonInfiniteScrollContent, IonInput, IonItem, IonLabel, IonList, IonModal, IonPage, IonTextarea, IonTitle, IonToolbar } from '@ionic/react';
 import React, { useEffect, useState } from 'react';
 import { chevronDownCircle, options, alert } from 'ionicons/icons';
 import { Geolocation } from '@capacitor/geolocation';
@@ -7,7 +7,9 @@ import './Profil.css';
 const Profil: React.FC = () => {
 
     const [items, setItems] = useState<string[]>([]);
-    const [showModal, setShowModal] = useState(false);
+    const [showModalClassement, setShowModalClassement] = useState(false);
+    const [showModalOptions, setShowModalOptions] = useState(false);
+    const [showModalDenonciation, setShowModalDenonciation] = useState(false);
 
     const printCurrentPosition = async () => {
         const coordinates = await Geolocation.getCurrentPosition();
@@ -46,10 +48,10 @@ const Profil: React.FC = () => {
                         <IonIcon icon={chevronDownCircle}></IonIcon>
                     </IonFabButton>
                     <IonFabList side="bottom">
-                        <IonFabButton>
+                        <IonFabButton onClick={() => setShowModalOptions(true)}>
                             <IonIcon icon={options}></IonIcon>
                         </IonFabButton>
-                        <IonFabButton>
+                        <IonFabButton onClick={() => setShowModalDenonciation(true)}>
                             <IonIcon icon={alert}></IonIcon>
                         </IonFabButton>
                     </IonFabList>
@@ -81,12 +83,44 @@ const Profil: React.FC = () => {
                             </IonCard>
                         </IonCardContent>
 
-                        <IonModal isOpen={showModal}
-                            onDidDismiss={() => setShowModal(false)} >
+                        <IonModal isOpen={showModalOptions}
+                            onDidDismiss={() => setShowModalOptions(false)} >
+                            <div className="modal">
+                                <IonTitle>Options</IonTitle>
+                                <IonButton class="modal-button" onClick={() => setShowModalOptions(false)}>Fermer</IonButton>
+                            </div>
+
+                        </IonModal>
+
+                        <IonModal isOpen={showModalDenonciation}
+                            onDidDismiss={() => setShowModalDenonciation(false)} >
+                            <div className="modal">
+                                <IonTitle>Reporter un problème</IonTitle>
+                                <IonButton class="modal-button" onClick={() => setShowModalDenonciation(false)}>Fermer</IonButton>
+                            </div>
+                            <IonItem>
+                                <IonLabel>Motif de la plainte :  </IonLabel>
+                                <IonInput placeholder="Veuillez entrer motif..."></IonInput>
+                            </IonItem>
+                            <IonItem>
+                                <IonLabel>Personne concernée :  </IonLabel>
+                                <IonInput placeholder="Personne concernée..."></IonInput>
+                            </IonItem>
+                            <IonItem>
+                                <IonLabel>Explication détaillée :  </IonLabel>
+                                <IonTextarea autoGrow={true} placeholder="Veuillez expliquer ce que vous avez vu..."></IonTextarea>
+                            </IonItem>
+
+                            <IonButton class="validate">Valider</IonButton>
+                        </IonModal>
+
+
+                        <IonModal isOpen={showModalClassement}
+                            onDidDismiss={() => setShowModalClassement(false)} >
                             <IonContent>
                                 <div className="modal">
                                     <IonTitle>Classement</IonTitle>
-                                    <IonButton class="modal-button" onClick={() => setShowModal(false)}>Fermer</IonButton>
+                                    <IonButton class="modal-button" onClick={() => setShowModalClassement(false)}>Fermer</IonButton>
                                 </div>
                                 <IonList>
                                     {items.map((item, index) => (
@@ -109,7 +143,7 @@ const Profil: React.FC = () => {
                             </IonContent>
                         </IonModal>
 
-                        <IonButton onClick={() => setShowModal(true)} class="btn btn-primary center-button">Classement</IonButton>
+                        <IonButton onClick={() => setShowModalClassement(true)} class="btn btn-primary center-button">Classement</IonButton>
                     </IonCard>
                 </div>
             </IonContent>
