@@ -1,4 +1,4 @@
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonInput, IonItem, IonLabel, IonList } from '@ionic/react';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonInput, IonItem, IonLabel, IonList, IonButton } from '@ionic/react';
 import ExploreContainer from '../components/ExploreContainer';
 import './Home.css';
 
@@ -25,9 +25,12 @@ const Home: React.FC = () => {
           <IonLabel id="labelPw" position="floating">Mot de passe :</IonLabel>
           <IonInput clearInput={true} type="password" id="pw"></IonInput>
         </IonItem>
+        <IonItem>
+          <IonButton>Connection</IonButton>
+        </IonItem>
       </IonContent>
     </IonPage>
-  );
+  );  
 };
 
 export default Home;
