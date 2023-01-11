@@ -24,8 +24,10 @@ ion-card {
 
 .profil-photo {
     position: absolute;
-    left: 41%;
     top: 5;
+    left: 0;
+    right: 0;
+    margin-left: auto;
     Z-index: 1;
 }
 
