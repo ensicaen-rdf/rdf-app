@@ -1,0 +1,47 @@
+ion-card-header {
+    text-align: center;
+    margin-top: 30px
+}
+
+ion-card {
+    margin-top: 30px
+}
+
+.center {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.center-button {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.profil-photo {
+    position: absolute;
+    left: 41%;
+    top: 5;
+    Z-index: 1;
+}
+
+.profil-content {
+    padding: 1rem;
+}
+
+.modal {
+    display: flex;
+    margin-right: 10px;
+    margin-bottom: 5px;
+    margin-top: 5px;
+}
+
+/* iOS places the subtitle above the title */
+ion-card-header.ios {
+    display: flex;
+    flex-flow: column-reverse;
+}
