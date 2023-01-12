@@ -60,23 +60,24 @@ function ConnectionButton(props: { testid: string; testmdp: string; }) {
       position: 'bottom'
     });
 
-    fetch('http://192.168.3.111:3000/auth/', {
-    method: 'POST',
-    body: JSON.stringify({
-      username:props.testid,
-      password:props.testmdp,
-    }),
-    headers: {
-      'Content-type': 'application/json; charset=UTF-8',
-    }
-    }).then(function(response){statusResponse = response.status;
-      console.log(response); return response.json()})
-      .then(function(data)
-      {
+    fetch('http://192.168.3.111:3000/api/auth/', {
+      method: 'POST',
+      body: JSON.stringify({
+        username: props.testid,
+        password: props.testmdp,
+      }),
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8',
+      }
+    }).then(function (response) {
+      statusResponse = response.status;
+      console.log(response); return response.json()
+    })
+      .then(function (data) {
         if (statusResponse == 201) {
           setHidden(true);
           console.log(data.token);
-          history.replace('/profil',[data.token]);
+          history.replace('/profil', [data.token]);
         } else {
           setHidden(false);
         }
