@@ -49,7 +49,7 @@ const Profil: React.FC = () => {
                 console.log(data);
             });
 
-        fetch('http://192.168.3.111:3000/api/me/', {
+        fetch('https://intensif06.ensicaen.fr/api/me/', {
             method: 'GET',
             headers: { "Authorization": "Bearer " + token }
         }).then(function (response) {
@@ -99,7 +99,7 @@ const Profil: React.FC = () => {
 
                 <div className="profil-content">
                     <IonAvatar class="center profil-photo">
-                        <img src={userData != null ? "https://192.168.3.111:3000/uploads/" + userData["photo"] : "https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y"} />
+                        <img src={userData != null ? "https://intensif06.ensicaen.fr/api/uploads/" + userData["photo"] : "https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y"} />
                     </IonAvatar>
 
                     <IonCard>
