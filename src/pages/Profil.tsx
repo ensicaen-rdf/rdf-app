@@ -14,8 +14,13 @@ const Profil: React.FC = () => {
     const [showModalClassement, setShowModalClassement] = useState(false);
     const [showModalOptions, setShowModalOptions] = useState(false);
     const [showModalDenonciation, setShowModalDenonciation] = useState(false);
+    const [showModalConnection, setShowModalConnection] = useState(false);
     const history = useHistory();
-    const userData = history.location.state
+    const token = history.location.state
+    var statusResponse = 0;
+    const [userData, setUserData] = useState(null);
+
+
 
     const printCurrentPosition = async () => {
         const coordinates = await Geolocation.getCurrentPosition();
@@ -34,6 +39,7 @@ const Profil: React.FC = () => {
     useEffect(() => {
         generateItems();
         printCurrentPosition();
+        console.log();
         Pedometer.isDistanceAvailable()
             .then((available: boolean) => console.log(available))
             .catch((error: any) => console.log(error));
@@ -42,6 +48,23 @@ const Profil: React.FC = () => {
             .subscribe((data: IPedometerData) => {
                 console.log(data);
             });
+
+        fetch('http://192.168.3.111:3000/me/', {
+            method: 'GET',
+            headers: { "Authorization": "Bearer " + token }
+        }).then(function (response) {
+            statusResponse = response.status;
+            return response.json();
+        })
+            .then(function (data) {
+                if (statusResponse == 200) {
+                    setUserData(data)
+                } else {
+                    history.replace("/home")
+                }
+            })
+
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -76,14 +99,14 @@ const Profil: React.FC = () => {
 
                 <div className="profil-content">
                     <IonAvatar class="center profil-photo">
-                        <img src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y" />
+                        <img src={userData != null ? "http://192.168.3.111:3000/uploads/" + userData["photo"] : "https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y"} />
                     </IonAvatar>
 
                     <IonCard>
                         <IonCardHeader>
-                            <IonCardTitle>Nom Prénom</IonCardTitle>
-                            <IonCardSubtitle>Attention</IonCardSubtitle>
-                            <IonCardSubtitle>Vous n'avez pas atteint le seuil moyen</IonCardSubtitle>
+                            <IonCardTitle>{userData != null ? userData["firstNames"] + " " + userData["lastName"] : "Prénom Nom"}</IonCardTitle>
+                            <IonCardSubtitle>Habitant à {userData != null ? userData["address"] + ", " + userData["city"] + ", " + userData["country"] : "Pays"} </IonCardSubtitle>
+                            <IonCardSubtitle>Travaillant à {userData != null ? userData["companyName"] : "Travail"}</IonCardSubtitle>
                         </IonCardHeader>
 
                         <IonCardContent>
@@ -107,6 +130,15 @@ const Profil: React.FC = () => {
                                 <IonButton class="modal-button" onClick={() => setShowModalOptions(false)}>Fermer</IonButton>
                             </div>
 
+                        </IonModal>
+
+                        <IonModal isOpen={showModalConnection}
+                            onDidDismiss={() => setShowModalConnection(false)} >
+                            <div className="modal">
+                                <IonTitle>Connection</IonTitle>
+                                <IonButton class="modal-button" onClick={() => setShowModalConnection(false)}>Fermer</IonButton>
+                            </div>
+                            Scanner pour vous connecter
                         </IonModal>
 
                         <IonModal isOpen={showModalDenonciation}
@@ -160,7 +192,7 @@ const Profil: React.FC = () => {
                         </IonModal>
 
                         <IonButton onClick={() => setShowModalClassement(true)} class="btn btn-primary center-button">Classement</IonButton>
-                        <IonButton onClick={() => setShowModalClassement(true)} class="btn btn-primary center-button">Connexion à un appareil</IonButton>
+                        <IonButton onClick={() => setShowModalConnection(true)} class="btn btn-primary center-button">Connexion à un appareil</IonButton>
 
                     </IonCard>
                 </div>
