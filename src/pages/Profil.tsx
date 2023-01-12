@@ -4,9 +4,11 @@ import { chevronDownCircle, options, alert, logOutOutline } from 'ionicons/icons
 
 import { Geolocation } from '@capacitor/geolocation';
 import { Stepcounter } from '@ionic-native/stepcounter';
+import { Pedometer } from '@ionic-native/pedometer';
 
 import './Profil.css';
 import { useHistory } from 'react-router-dom';
+import { resolve } from 'dns';
 
 const Profil: React.FC = () => {
 
@@ -22,9 +24,7 @@ const Profil: React.FC = () => {
     const history = useHistory();
     const token = history.location.state
     var statusResponse = 0;
-
-
-
+    const [number, setStepCounter] = useState(0);
 
     const printCurrentPosition = async () => {
         const coordinates = await Geolocation.getCurrentPosition();
@@ -40,14 +40,24 @@ const Profil: React.FC = () => {
         setItems([...items, ...newItems]);
     };
 
+    const setupStep = async () => {
+        Stepcounter.start(5);
+        setStepCounter(await Stepcounter.getStepCount());
+        console.log(await Stepcounter.getTodayStepCount());
+        console.log(await Stepcounter.deviceCanCountSteps());
+    }
+
+    const updateStep = async () => {
+        setStepCounter(await Stepcounter.getStepCount());
+        console.log(number);
+        console.log(await Stepcounter.getHistory());
+    }
+
     useEffect(() => {
         generateItems();
         printCurrentPosition();
 
-        // Test stepcounter
-        Stepcounter.start(0)
-        var number = Stepcounter.getStepCount()
-        console.log(number)
+        setupStep();        
 
         fetch('https://intensif06.ensicaen.fr/api/me/', {
             method: 'GET',
@@ -104,7 +114,7 @@ const Profil: React.FC = () => {
                         <IonIcon icon={chevronDownCircle}></IonIcon>
                     </IonFabButton>
                     <IonFabList side="bottom">
-                        <IonFabButton onClick={() => setShowModalOptions(true)}>
+                        <IonFabButton onClick={() => {setShowModalOptions(true); updateStep()}}>
                             <IonIcon icon={options}></IonIcon>
                         </IonFabButton>
                         <IonFabButton onClick={() => setShowModalDenonciation(true)}>
@@ -137,7 +147,7 @@ const Profil: React.FC = () => {
                                     Classement : 5231
                                 </IonCardContent>
                                 <IonCardContent>
-                                    Nombre de pas : {+ Stepcounter.getStepCount()}
+                                    Nombre de pas : {number}
                                 </IonCardContent>
                             </IonCard>
                         </IonCardContent>
