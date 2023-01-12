@@ -60,7 +60,7 @@ function ConnectionButton(props: { testid: string; testmdp: string; }) {
       position: 'bottom'
     });
 
-    fetch('http://192.168.3.111:3000/api/auth/', {
+    fetch('https://intensif06.ensicaen.fr/api/auth/', {
       method: 'POST',
       body: JSON.stringify({
         username: props.testid,
