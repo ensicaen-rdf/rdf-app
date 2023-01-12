@@ -48,7 +48,7 @@ function ConnectionButton(props: { testid: string; testmdp: string; }) {
   const history = useHistory();
 
   const authenttification = () => {
-    fetch('http://192.168.3.111:3000/api/auth/', {
+    fetch('https://192.168.3.111:3000/api/auth/', {
     method: 'POST',
     body: JSON.stringify({
       username:props.testid,
