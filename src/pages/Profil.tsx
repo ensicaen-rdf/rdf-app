@@ -17,9 +17,11 @@ const Profil: React.FC = () => {
     const [showModalConnection, setShowModalConnection] = useState(false);
     const [step, setStep] = useState(0);
     const [userData, setUserData] = useState(null);
+    const [citizenList, setCitizenList] = useState<any[]>([])
     const [personTarget, setPersonTarget] = useState("");
     const [reason, setReason] = useState("");
     const history = useHistory();
+
     const token = history.location.state
     var statusResponse = 0;
 
@@ -40,14 +42,16 @@ const Profil: React.FC = () => {
         setItems([...items, ...newItems]);
     };
 
+
+
     useEffect(() => {
         generateItems();
         printCurrentPosition();
 
         // Test stepcounter
-        Stepcounter.start(0)
-        var number = Stepcounter.getStepCount()
-        console.log(number)
+        // Stepcounter.start(0)
+        // var number = Stepcounter.getStepCount()
+        // console.log(number)
 
         fetch('https://intensif06.ensicaen.fr/api/me/', {
             method: 'GET',
@@ -64,7 +68,15 @@ const Profil: React.FC = () => {
                 }
             })
 
-
+        fetch('https://intensif06.ensicaen.fr/api/people/', {
+            method: 'GET',
+        }).then(function (response) {
+            statusResponse = response.status;
+            return response.json();
+        })
+            .then(function (data) {
+                setCitizenList(data);
+            })
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -77,7 +89,8 @@ const Profil: React.FC = () => {
     }
 
     const report = () => {
-        fetch('http://192.168.3.111:3000/api/report/', {
+        //marche pas
+        fetch('https://intensif06.ensicaen.fr/api/report/', {
             method: 'POST',
             headers: { "Authorization": "Bearer " + token },
             body: JSON.stringify({
@@ -186,12 +199,12 @@ const Profil: React.FC = () => {
                                     <IonButton class="modal-button" onClick={() => setShowModalClassement(false)}>Fermer</IonButton>
                                 </div>
                                 <IonList>
-                                    {items.map((item, index) => (
-                                        <IonItem key={item}>
+                                    {citizenList && citizenList.map((citizen: { [x: string]: string; }, index: any) => (
+                                        <IonItem key={citizen["nationalId"]}>
                                             <IonAvatar slot="start">
-                                                <img src={'https://picsum.photos/80/80?random=' + index} alt="avatar" />
+                                                <img src={"https://intensif06.ensicaen.fr/api/uploads/" + citizen["photo"]} alt="avatar" />
                                             </IonAvatar>
-                                            <IonLabel>{item}</IonLabel>
+                                            <IonLabel>{citizen["firstNames"] + " " + citizen["lastName"]}</IonLabel>
                                         </IonItem>
                                     ))}
                                 </IonList>
