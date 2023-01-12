@@ -25,7 +25,7 @@ const Home: React.FC = () => {
       <IonContent fullscreen>
         <IonHeader collapse="condense">
           <IonToolbar>
-            <IonTitle size="large">Blank</IonTitle>
+            <IonTitle size="large">Connexion</IonTitle>
           </IonToolbar>
         </IonHeader>
         <IonItem>
@@ -48,7 +48,6 @@ function ConnectionButton(props: { testid: string; testmdp: string; }) {
   const history = useHistory();
 
   const authenttification = () => {
-
     fetch('http://192.168.3.111:3000/auth/', {
     method: 'POST',
     body: JSON.stringify({
@@ -74,10 +73,12 @@ function ConnectionButton(props: { testid: string; testmdp: string; }) {
 
   return (
     <IonItem>
-      <IonButton color="success" shape="round" expand='block' onClick={() => authenttification()}>
-        Connection
-      </IonButton>
-      <IonText color="danger" hidden={hidden}>
+      <IonItem>
+        <IonButton color="success" shape="round" expand='block' onClick={() => authenttification()}>
+          Connexion
+        </IonButton>
+      </IonItem>
+      <IonText color='danger' hidden={hidden}>
         Compte invalide
       </IonText>
     </IonItem>
