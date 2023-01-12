@@ -33,7 +33,7 @@ const Home: React.FC = () => {
           </IonToolbar>
         </IonHeader>
         <IonItem>
-          <IonLabel id="labelId" position="floating">Nom d'utilisateur :</IonLabel>
+          <IonLabel id="labelId" position="floating">Id d'authentification :</IonLabel>
           <IonInput clearInput={true} id="id" name="id" onIonChange={handleInputId}></IonInput>
         </IonItem>
         <IonItem>
@@ -50,7 +50,6 @@ function ConnectionButton(props: { testid: string; testmdp: string; }) {
   const [present] = useIonToast();
   const message = "Id : " + props.testid + " --- mdp : " + props.testmdp;
   var statusResponse = 0;
-  var tokenAuth: void ;
   const [hidden, setHidden] = useState(true);
   const history = useHistory();
 
@@ -70,18 +69,18 @@ function ConnectionButton(props: { testid: string; testmdp: string; }) {
     headers: {
       'Content-type': 'application/json; charset=UTF-8',
     }
-    }).then(function(response){statusResponse = response.status})
+    }).then(function(response){statusResponse = response.status;
+      console.log(response); return response.json()})
       .then(function(data)
-      {tokenAuth = data;}).catch(error => setHidden(false));
-    
-    if (statusResponse == 201) {
-      setHidden(true);
-      history.replace('/profil',[tokenAuth]);
-    } else {
-      setHidden(false);
-    }
-    console.log(hidden);
-
+      {
+        if (statusResponse == 201) {
+          setHidden(true);
+          console.log(data.token);
+          history.replace('/profil',[data.token]);
+        } else {
+          setHidden(false);
+        }
+      }).catch(error => setHidden(false));
   };
 
   return (
