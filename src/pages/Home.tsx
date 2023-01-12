@@ -54,12 +54,26 @@ function ConnectionButton(props: { testid: string; testmdp: string; }) {
   const [hidden, setHidden] = useState(true);
   const history = useHistory();
 
-  const presentToast = () => {
+  const presentToast = async () => {
     present({
       message: message,
       duration: 1500,
       position: 'bottom'
     });
+
+    fetch('http://192.168.3.111:3000/auth/', {
+    method: 'POST',
+    body: JSON.stringify({
+      username:props.testid,
+      password:props.testmdp,
+    }),
+    headers: {
+      'Content-type': 'application/json; charset=UTF-8',
+    }
+    }).then(function(response){console.log(response)})
+      .then(function(data)
+      {console.log(data)}).catch(error => setHidden(false));
+
     if (fauxBonId != props.testid || fauxBonMdp != props.testmdp) {
       setHidden(false);
     } else {
