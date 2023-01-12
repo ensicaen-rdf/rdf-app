@@ -77,7 +77,7 @@ const Profil: React.FC = () => {
     }
 
     const report = () => {
-        fetch('http://192.168.3.111:3000/api/report/', {
+        fetch('https://intensif06.ensicaen.fr/api/report/', {
             method: 'POST',
             headers: { "Authorization": "Bearer " + token },
             body: JSON.stringify({
