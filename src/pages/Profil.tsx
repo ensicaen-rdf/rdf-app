@@ -49,7 +49,7 @@ const Profil: React.FC = () => {
                 console.log(data);
             });
 
-        fetch('http://192.168.3.111:3000/me/', {
+        fetch('http://192.168.3.111:3000/api/me/', {
             method: 'GET',
             headers: { "Authorization": "Bearer " + token }
         }).then(function (response) {
