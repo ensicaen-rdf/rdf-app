@@ -160,6 +160,8 @@ const Profil: React.FC = () => {
                         </IonModal>
 
                         <IonButton onClick={() => setShowModalClassement(true)} class="btn btn-primary center-button">Classement</IonButton>
+                        <IonButton onClick={() => setShowModalClassement(true)} class="btn btn-primary center-button">Connexion à un appareil</IonButton>
+
                     </IonCard>
                 </div>
             </IonContent>
