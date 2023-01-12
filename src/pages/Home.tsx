@@ -1,9 +1,9 @@
-import {SetStateAction, useState} from 'react'
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonInput, IonItem, IonLabel, IonList, IonButton, useIonToast, IonText} from '@ionic/react';
+import { SetStateAction, useState } from 'react'
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonInput, IonItem, IonLabel, IonList, IonButton, useIonToast, IonText } from '@ionic/react';
 import { getElement } from 'ionicons/dist/types/stencil-public-runtime';
 import ExploreContainer from '../components/ExploreContainer';
 import './Home.css';
-import {useHistory} from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 const Home: React.FC = () => {
   const [id, setButtonId] = useState('');
@@ -43,15 +43,15 @@ const Home: React.FC = () => {
         <ConnectionButton testid={id} testmdp={mdp} />
       </IonContent>
     </IonPage>
-  );  
+  );
 };
 
 function ConnectionButton(props: { testid: string; testmdp: string; }) {
   const [present] = useIonToast();
-  const message = "Id : "+props.testid+" --- mdp : "+props.testmdp;
+  const message = "Id : " + props.testid + " --- mdp : " + props.testmdp;
   const fauxBonId = "ouioui";
   const fauxBonMdp = "taxi";
-  const [hidden,setHidden] = useState(true);
+  const [hidden, setHidden] = useState(true);
   const history = useHistory();
 
   const presentToast = () => {
@@ -60,7 +60,7 @@ function ConnectionButton(props: { testid: string; testmdp: string; }) {
       duration: 1500,
       position: 'bottom'
     });
-    if (fauxBonId!=props.testid || fauxBonMdp!=props.testmdp){
+    if (fauxBonId != props.testid || fauxBonMdp != props.testmdp) {
       setHidden(false);
     } else {
       setHidden(true);
@@ -70,7 +70,7 @@ function ConnectionButton(props: { testid: string; testmdp: string; }) {
 
   };
 
-  return(
+  return (
     <IonItem>
       <IonButton color="success" shape="round" expand='block' onClick={() => presentToast()}>
         Connection
