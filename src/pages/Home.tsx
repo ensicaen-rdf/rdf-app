@@ -1,7 +1,5 @@
-import { SetStateAction, useState } from 'react'
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonInput, IonItem, IonLabel, IonList, IonButton, useIonToast, IonText } from '@ionic/react';
-import { getElement } from 'ionicons/dist/types/stencil-public-runtime';
-import ExploreContainer from '../components/ExploreContainer';
+import { useState } from 'react'
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonInput, IonItem, IonLabel, IonButton, useIonToast, IonText } from '@ionic/react';
 import './Home.css';
 import { useHistory } from 'react-router-dom';
 
@@ -11,12 +9,10 @@ const Home: React.FC = () => {
 
   function handleInputId(event: { target: any; }) {
     setButtonId(event.target.value);
-    console.log(id);
   }
 
   function handleInputMdp(event: { target: any; }) {
     setButtonMdp(event.target.value);
-    console.log(mdp);
   }
 
   return (
@@ -29,7 +25,7 @@ const Home: React.FC = () => {
       <IonContent fullscreen>
         <IonHeader collapse="condense">
           <IonToolbar>
-            <IonTitle size="large">Blank</IonTitle>
+            <IonTitle size="large">Connexion</IonTitle>
           </IonToolbar>
         </IonHeader>
         <IonItem>
@@ -47,37 +43,26 @@ const Home: React.FC = () => {
 };
 
 function ConnectionButton(props: { testid: string; testmdp: string; }) {
-  const [present] = useIonToast();
-  const message = "Id : " + props.testid + " --- mdp : " + props.testmdp;
   var statusResponse = 0;
   const [hidden, setHidden] = useState(true);
   const history = useHistory();
 
-  const presentToast = () => {
-    present({
-      message: message,
-      duration: 1500,
-      position: 'bottom'
-    });
-
-    fetch('https://intensif06.ensicaen.fr/api/auth/', {
-      method: 'POST',
-      body: JSON.stringify({
-        username: props.testid,
-        password: props.testmdp,
-      }),
-      headers: {
-        'Content-type': 'application/json; charset=UTF-8',
-      }
-    }).then(function (response) {
-      statusResponse = response.status;
-      console.log(response); return response.json()
-    })
-      .then(function (data) {
+  const authenttification = () => {
+    fetch('https://intensif06.ensicaen.fr/api/auth', {
+    method: 'POST',
+    body: JSON.stringify({
+      username:props.testid,
+      password:props.testmdp,
+    }),
+    headers: {
+      'Content-type': 'application/json; charset=UTF-8',
+    }
+    }).then(function(response){statusResponse = response.status; return response.json()})
+      .then(function(data)
+      {
         if (statusResponse == 201) {
           setHidden(true);
-          console.log(data.token);
-          history.replace('/profil', [data.token]);
+          history.replace('/profil',[data.token]);
         } else {
           setHidden(false);
         }
@@ -86,18 +71,16 @@ function ConnectionButton(props: { testid: string; testmdp: string; }) {
 
   return (
     <IonItem>
-      <IonButton color="success" shape="round" expand='block' onClick={() => presentToast()}>
-        Connection
-      </IonButton>
-      <IonText color="danger" hidden={hidden}>
+      <IonItem>
+        <IonButton color="success" shape="round" expand='block' onClick={() => authenttification()}>
+          Connexion
+        </IonButton>
+      </IonItem>
+      <IonText color='danger' hidden={hidden}>
         Compte invalide
       </IonText>
     </IonItem>
   );
-}
-
-function api() {
-
 }
 
 export default Home;
