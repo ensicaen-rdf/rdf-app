@@ -63,7 +63,6 @@ function ConnectionButton(props: { testid: string; testmdp: string; }) {
       setHidden(false);
     } else {
       setHidden(true);
-      return(<Link to="/profile" ></Link>);
     }
     console.log(hidden);
   };
