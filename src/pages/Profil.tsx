@@ -7,6 +7,7 @@ import { Stepcounter } from '@ionic-native/stepcounter';
 
 import './Profil.css';
 import { useHistory } from 'react-router-dom';
+import { resolve } from 'dns';
 
 const Profil: React.FC = () => {
 
@@ -15,7 +16,6 @@ const Profil: React.FC = () => {
     const [showModalOptions, setShowModalOptions] = useState(false);
     const [showModalDenonciation, setShowModalDenonciation] = useState(false);
     const [showModalConnection, setShowModalConnection] = useState(false);
-    const [step, setStep] = useState(0);
     const [userData, setUserData] = useState(null);
     const [citizenList, setCitizenList] = useState<any[]>([])
     const [personTarget, setPersonTarget] = useState("");
@@ -24,9 +24,7 @@ const Profil: React.FC = () => {
 
     const token = history.location.state
     var statusResponse = 0;
-
-
-
+    const [step, setStepCounter] = useState(0);
 
     const printCurrentPosition = async () => {
         const coordinates = await Geolocation.getCurrentPosition();
@@ -42,16 +40,24 @@ const Profil: React.FC = () => {
         setItems([...items, ...newItems]);
     };
 
+    const setupStep = async () => {
+        Stepcounter.start(0);
+        setStepCounter(await Stepcounter.getStepCount());
+        console.log(await Stepcounter.getTodayStepCount());
+        console.log(await Stepcounter.deviceCanCountSteps());
+    }
 
+    const updateStep = async () => {
+        setStepCounter(await Stepcounter.getStepCount());
+        console.log(step);
+        console.log(await Stepcounter.getHistory());
+    }
 
     useEffect(() => {
         generateItems();
         printCurrentPosition();
 
-        // Test stepcounter
-        // Stepcounter.start(0)
-        // var number = Stepcounter.getStepCount()
-        // console.log(number)
+        setupStep();        
 
         fetch('https://intensif06.ensicaen.fr/api/me/', {
             method: 'GET',
@@ -117,7 +123,7 @@ const Profil: React.FC = () => {
                         <IonIcon icon={chevronDownCircle}></IonIcon>
                     </IonFabButton>
                     <IonFabList side="bottom">
-                        <IonFabButton onClick={() => setShowModalOptions(true)}>
+                        <IonFabButton onClick={() => {setShowModalOptions(true); updateStep()}}>
                             <IonIcon icon={options}></IonIcon>
                         </IonFabButton>
                         <IonFabButton onClick={() => setShowModalDenonciation(true)}>
@@ -150,7 +156,7 @@ const Profil: React.FC = () => {
                                     Classement : 5231
                                 </IonCardContent>
                                 <IonCardContent>
-                                    Nombre de pas : {+ Stepcounter.getStepCount()}
+                                    Nombre de pas : {step}
                                 </IonCardContent>
                             </IonCard>
                         </IonCardContent>
