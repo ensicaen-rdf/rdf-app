@@ -49,12 +49,12 @@ const Home: React.FC = () => {
 function ConnectionButton(props: { testid: string; testmdp: string; }) {
   const [present] = useIonToast();
   const message = "Id : " + props.testid + " --- mdp : " + props.testmdp;
-  const fauxBonId = "ouioui";
-  const fauxBonMdp = "taxi";
+  var statusResponse = 0;
+  var tokenAuth: void ;
   const [hidden, setHidden] = useState(true);
   const history = useHistory();
 
-  const presentToast = async () => {
+  const presentToast = () => {
     present({
       message: message,
       duration: 1500,
@@ -70,15 +70,15 @@ function ConnectionButton(props: { testid: string; testmdp: string; }) {
     headers: {
       'Content-type': 'application/json; charset=UTF-8',
     }
-    }).then(function(response){console.log(response)})
+    }).then(function(response){statusResponse = response.status})
       .then(function(data)
-      {console.log(data)}).catch(error => setHidden(false));
-
-    if (fauxBonId != props.testid || fauxBonMdp != props.testmdp) {
-      setHidden(false);
-    } else {
+      {tokenAuth = data;}).catch(error => setHidden(false));
+    
+    if (statusResponse == 201) {
       setHidden(true);
-      history.replace('/profil',[fauxBonId]);
+      history.replace('/profil',[tokenAuth]);
+    } else {
+      setHidden(false);
     }
     console.log(hidden);
 
