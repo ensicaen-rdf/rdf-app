@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { chevronDownCircle, options, alert, logOutOutline } from 'ionicons/icons';
 
 import { Geolocation } from '@capacitor/geolocation';
-import { IPedometerData, Pedometer } from '@ionic-native/pedometer';
+import { Stepcounter } from '@ionic-native/stepcounter';
 
 import './Profil.css';
 import { useHistory } from 'react-router-dom';
@@ -15,10 +15,14 @@ const Profil: React.FC = () => {
     const [showModalOptions, setShowModalOptions] = useState(false);
     const [showModalDenonciation, setShowModalDenonciation] = useState(false);
     const [showModalConnection, setShowModalConnection] = useState(false);
+    const [step, setStep] = useState(0);
+    const [userData, setUserData] = useState(null);
+    const [personTarget, setPersonTarget] = useState("");
+    const [reason, setReason] = useState("");
     const history = useHistory();
     const token = history.location.state
     var statusResponse = 0;
-    const [userData, setUserData] = useState(null);
+
 
 
 
@@ -39,15 +43,11 @@ const Profil: React.FC = () => {
     useEffect(() => {
         generateItems();
         printCurrentPosition();
-        console.log();
-        Pedometer.isDistanceAvailable()
-            .then((available: boolean) => console.log(available))
-            .catch((error: any) => console.log(error));
 
-        Pedometer.startPedometerUpdates()
-            .subscribe((data: IPedometerData) => {
-                console.log(data);
-            });
+        // Test stepcounter
+        Stepcounter.start(0)
+        var number = Stepcounter.getStepCount()
+        console.log(number)
 
         fetch('https://intensif06.ensicaen.fr/api/me/', {
             method: 'GET',
@@ -67,6 +67,25 @@ const Profil: React.FC = () => {
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    function handleInputTarget(event: { target: any; }) {
+        setPersonTarget(event.target.value);
+    }
+
+    function handleInputReason(event: { target: any; }) {
+        setReason(event.target.value);
+    }
+
+    const report = () => {
+        fetch('http://192.168.3.111:3000/api/report/', {
+            method: 'POST',
+            headers: { "Authorization": "Bearer " + token },
+            body: JSON.stringify({
+                idPersonTarget: personTarget,
+                reason: reason,
+            })
+        })
+    }
 
     return (
         <IonPage>
@@ -118,7 +137,7 @@ const Profil: React.FC = () => {
                                     Classement : 5231
                                 </IonCardContent>
                                 <IonCardContent>
-                                    Nombre de pas : 4550
+                                    Nombre de pas : {+ Stepcounter.getStepCount()}
                                 </IonCardContent>
                             </IonCard>
                         </IonCardContent>
@@ -148,19 +167,15 @@ const Profil: React.FC = () => {
                                 <IonButton class="modal-button" onClick={() => setShowModalDenonciation(false)}>Fermer</IonButton>
                             </div>
                             <IonItem>
-                                <IonLabel>Motif de la plainte :  </IonLabel>
-                                <IonInput placeholder="Veuillez entrer motif..."></IonInput>
-                            </IonItem>
-                            <IonItem>
                                 <IonLabel>Personne concernée :  </IonLabel>
-                                <IonInput placeholder="Personne concernée..."></IonInput>
+                                <IonInput placeholder="Personne concernée..." onIonChange={handleInputTarget}></IonInput>
                             </IonItem>
                             <IonItem>
-                                <IonLabel>Explication détaillée :  </IonLabel>
-                                <IonTextarea autoGrow={true} placeholder="Veuillez expliquer ce que vous avez vu..."></IonTextarea>
+                                <IonLabel>Motif de la plainte :  </IonLabel>
+                                <IonTextarea autoGrow={true} placeholder="Veuillez expliquer ce que vous avez vu..." onIonChange={handleInputReason}></IonTextarea>
                             </IonItem>
 
-                            <IonButton class="validate">Valider</IonButton>
+                            <IonButton class="validate" onClick={() => report()}>Valider</IonButton>
                         </IonModal>
 
                         <IonModal isOpen={showModalClassement}
