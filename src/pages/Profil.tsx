@@ -24,7 +24,7 @@ const Profil: React.FC = () => {
 
     const token = history.location.state
     var statusResponse = 0;
-    const [number, setStepCounter] = useState(0);
+    const [step, setStepCounter] = useState(0);
 
     const printCurrentPosition = async () => {
         const coordinates = await Geolocation.getCurrentPosition();
@@ -41,7 +41,7 @@ const Profil: React.FC = () => {
     };
 
     const setupStep = async () => {
-        Stepcounter.start(5);
+        Stepcounter.start(0);
         setStepCounter(await Stepcounter.getStepCount());
         console.log(await Stepcounter.getTodayStepCount());
         console.log(await Stepcounter.deviceCanCountSteps());
@@ -49,7 +49,7 @@ const Profil: React.FC = () => {
 
     const updateStep = async () => {
         setStepCounter(await Stepcounter.getStepCount());
-        console.log(number);
+        console.log(step);
         console.log(await Stepcounter.getHistory());
     }
 
@@ -156,7 +156,7 @@ const Profil: React.FC = () => {
                                     Classement : 5231
                                 </IonCardContent>
                                 <IonCardContent>
-                                    Nombre de pas : {number}
+                                    Nombre de pas : {step}
                                 </IonCardContent>
                             </IonCard>
                         </IonCardContent>
