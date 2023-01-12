@@ -32,7 +32,6 @@ const Home: React.FC = () => {
             <IonTitle size="large">Blank</IonTitle>
           </IonToolbar>
         </IonHeader>
-        <ExploreContainer />
         <IonItem>
           <IonLabel id="labelId" position="floating">Nom d'utilisateur :</IonLabel>
           <IonInput clearInput={true} id="id" name="id" onIonChange={handleInputId}></IonInput>
