@@ -23,7 +23,7 @@ const Home: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Connection</IonTitle>
+          <IonTitle>Connexion</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
@@ -33,7 +33,7 @@ const Home: React.FC = () => {
           </IonToolbar>
         </IonHeader>
         <IonItem>
-          <IonLabel id="labelId" position="floating">Nom d'utilisateur :</IonLabel>
+          <IonLabel id="labelId" position="floating">Id d'authentification :</IonLabel>
           <IonInput clearInput={true} id="id" name="id" onIonChange={handleInputId}></IonInput>
         </IonItem>
         <IonItem>
@@ -49,8 +49,7 @@ const Home: React.FC = () => {
 function ConnectionButton(props: { testid: string; testmdp: string; }) {
   const [present] = useIonToast();
   const message = "Id : " + props.testid + " --- mdp : " + props.testmdp;
-  const fauxBonId = "ouioui";
-  const fauxBonMdp = "taxi";
+  var statusResponse = 0;
   const [hidden, setHidden] = useState(true);
   const history = useHistory();
 
@@ -60,14 +59,28 @@ function ConnectionButton(props: { testid: string; testmdp: string; }) {
       duration: 1500,
       position: 'bottom'
     });
-    if (fauxBonId != props.testid || fauxBonMdp != props.testmdp) {
-      setHidden(false);
-    } else {
-      setHidden(true);
-      history.replace('/profil', [fauxBonId]);
-    }
-    console.log(hidden);
 
+    fetch('http://192.168.3.111:3000/auth/', {
+    method: 'POST',
+    body: JSON.stringify({
+      username:props.testid,
+      password:props.testmdp,
+    }),
+    headers: {
+      'Content-type': 'application/json; charset=UTF-8',
+    }
+    }).then(function(response){statusResponse = response.status;
+      console.log(response); return response.json()})
+      .then(function(data)
+      {
+        if (statusResponse == 201) {
+          setHidden(true);
+          console.log(data.token);
+          history.replace('/profil',[data.token]);
+        } else {
+          setHidden(false);
+        }
+      }).catch(error => setHidden(false));
   };
 
   return (
