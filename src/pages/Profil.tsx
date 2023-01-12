@@ -6,6 +6,7 @@ import { Geolocation } from '@capacitor/geolocation';
 import { IPedometerData, Pedometer } from '@ionic-native/pedometer';
 
 import './Profil.css';
+import {useHistory} from 'react-router-dom';
 
 const Profil: React.FC = () => {
 
@@ -13,6 +14,7 @@ const Profil: React.FC = () => {
     const [showModalClassement, setShowModalClassement] = useState(false);
     const [showModalOptions, setShowModalOptions] = useState(false);
     const [showModalDenonciation, setShowModalDenonciation] = useState(false);
+    const history = useHistory();
 
     const printCurrentPosition = async () => {
         const coordinates = await Geolocation.getCurrentPosition();
