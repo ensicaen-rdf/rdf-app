@@ -12,6 +12,7 @@ const Profil: React.FC = () => {
     const [showModalOptions, setShowModalOptions] = useState(false);
     const [showModalDenonciation, setShowModalDenonciation] = useState(false);
     const history = useHistory();
+    console.log(history.location.state)
 
     const printCurrentPosition = async () => {
         const coordinates = await Geolocation.getCurrentPosition();

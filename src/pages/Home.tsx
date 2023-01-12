@@ -23,7 +23,7 @@ const Home: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Connection</IonTitle>
+          <IonTitle>Connexion</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
@@ -64,7 +64,7 @@ function ConnectionButton(props: { testid: string; testmdp: string; }) {
       setHidden(false);
     } else {
       setHidden(true);
-      history.push('/profil',[fauxBonId]);
+      history.replace('/profil',[fauxBonId]);
     }
     console.log(hidden);
 
