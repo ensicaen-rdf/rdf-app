@@ -131,7 +131,6 @@ const Profil: React.FC = () => {
                             <IonButton class="validate">Valider</IonButton>
                         </IonModal>
 
-
                         <IonModal isOpen={showModalClassement}
                             onDidDismiss={() => setShowModalClassement(false)} >
                             <IonContent>
