@@ -1,9 +1,12 @@
 import { IonAvatar, IonBackButton, IonButton, IonButtons, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonContent, IonFab, IonFabButton, IonFabList, IonHeader, IonIcon, IonInfiniteScroll, IonInfiniteScrollContent, IonInput, IonItem, IonLabel, IonList, IonModal, IonPage, IonTextarea, IonTitle, IonToolbar } from '@ionic/react';
 import React, { useEffect, useState } from 'react';
-import { chevronDownCircle, options, alert } from 'ionicons/icons';
+import { chevronDownCircle, options, alert, logOutOutline } from 'ionicons/icons';
+
 import { Geolocation } from '@capacitor/geolocation';
+import { IPedometerData, Pedometer } from '@ionic-native/pedometer';
+
 import './Profil.css';
-import {useHistory} from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 const Profil: React.FC = () => {
 
@@ -12,6 +15,7 @@ const Profil: React.FC = () => {
     const [showModalOptions, setShowModalOptions] = useState(false);
     const [showModalDenonciation, setShowModalDenonciation] = useState(false);
     const history = useHistory();
+    const userData = history.location.state
 
     const printCurrentPosition = async () => {
         const coordinates = await Geolocation.getCurrentPosition();
@@ -30,6 +34,14 @@ const Profil: React.FC = () => {
     useEffect(() => {
         generateItems();
         printCurrentPosition();
+        Pedometer.isDistanceAvailable()
+            .then((available: boolean) => console.log(available))
+            .catch((error: any) => console.log(error));
+
+        Pedometer.startPedometerUpdates()
+            .subscribe((data: IPedometerData) => {
+                console.log(data);
+            });
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -55,6 +67,9 @@ const Profil: React.FC = () => {
                         </IonFabButton>
                         <IonFabButton onClick={() => setShowModalDenonciation(true)}>
                             <IonIcon icon={alert}></IonIcon>
+                        </IonFabButton>
+                        <IonFabButton onClick={() => history.replace('/home')}>
+                            <IonIcon icon={logOutOutline}></IonIcon>
                         </IonFabButton>
                     </IonFabList>
                 </IonFab>
