@@ -4,7 +4,6 @@ import { chevronDownCircle, options, alert, logOutOutline } from 'ionicons/icons
 
 import { Geolocation } from '@capacitor/geolocation';
 import { Stepcounter } from '@ionic-native/stepcounter';
-import { Pedometer } from '@ionic-native/pedometer';
 
 import './Profil.css';
 import { useHistory } from 'react-router-dom';
@@ -17,7 +16,6 @@ const Profil: React.FC = () => {
     const [showModalOptions, setShowModalOptions] = useState(false);
     const [showModalDenonciation, setShowModalDenonciation] = useState(false);
     const [showModalConnection, setShowModalConnection] = useState(false);
-    const [step, setStep] = useState(0);
     const [userData, setUserData] = useState(null);
     const [personTarget, setPersonTarget] = useState("");
     const [reason, setReason] = useState("");
