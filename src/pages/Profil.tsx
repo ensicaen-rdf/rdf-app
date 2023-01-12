@@ -1,7 +1,10 @@
 import { IonAvatar, IonBackButton, IonButton, IonButtons, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonContent, IonFab, IonFabButton, IonFabList, IonHeader, IonIcon, IonInfiniteScroll, IonInfiniteScrollContent, IonInput, IonItem, IonLabel, IonList, IonModal, IonPage, IonTextarea, IonTitle, IonToolbar } from '@ionic/react';
 import React, { useEffect, useState } from 'react';
 import { chevronDownCircle, options, alert } from 'ionicons/icons';
+
 import { Geolocation } from '@capacitor/geolocation';
+import { IPedometerData, Pedometer } from '@ionic-native/pedometer';
+
 import './Profil.css';
 
 const Profil: React.FC = () => {
@@ -28,6 +31,14 @@ const Profil: React.FC = () => {
     useEffect(() => {
         generateItems();
         printCurrentPosition();
+        Pedometer.isDistanceAvailable()
+            .then((available: boolean) => console.log(available))
+            .catch((error: any) => console.log(error));
+
+        Pedometer.startPedometerUpdates()
+            .subscribe((data: IPedometerData) => {
+                console.log(data);
+            });
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
