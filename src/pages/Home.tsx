@@ -3,7 +3,7 @@ import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonInput, IonItem
 import { getElement } from 'ionicons/dist/types/stencil-public-runtime';
 import ExploreContainer from '../components/ExploreContainer';
 import './Home.css';
-import { Link } from 'react-router-dom';
+import {useHistory} from 'react-router-dom';
 
 const Home: React.FC = () => {
   const [id, setButtonId] = useState('');
@@ -52,6 +52,7 @@ function ConnectionButton(props: { testid: string; testmdp: string; }) {
   const fauxBonId = "ouioui";
   const fauxBonMdp = "taxi";
   const [hidden,setHidden] = useState(true);
+  const history = useHistory();
 
   const presentToast = () => {
     present({
@@ -63,8 +64,10 @@ function ConnectionButton(props: { testid: string; testmdp: string; }) {
       setHidden(false);
     } else {
       setHidden(true);
+      history.push('/profil',[fauxBonId]);
     }
     console.log(hidden);
+
   };
 
   return(
