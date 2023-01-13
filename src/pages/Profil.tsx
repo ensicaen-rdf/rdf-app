@@ -11,7 +11,6 @@ import { resolve } from 'dns';
 
 const Profil: React.FC = () => {
 
-    const [items, setItems] = useState<string[]>([]);
     const [showModalClassement, setShowModalClassement] = useState(false);
     const [showModalOptions, setShowModalOptions] = useState(false);
     const [showModalDenonciation, setShowModalDenonciation] = useState(false);
@@ -51,14 +50,6 @@ const Profil: React.FC = () => {
             console.log("c'est pas bon la loca");
           }
         }).catch(error => console.log(error));
-    };
-
-    const generateItems = () => {
-        const newItems = [];
-        for (let i = 0; i < 50; i++) {
-            newItems.push(`Item ${1 + items.length + i}`);
-        }
-        setItems([...items, ...newItems]);
     };
 
     const setupStep = async () => {
@@ -116,10 +107,8 @@ const Profil: React.FC = () => {
             })
     }
 
-    console.log(userData);
-
     useEffect(() => {
-        generateItems();
+        printCurrentPosition();
 
         setupStep();
         setupCoord();     
@@ -192,6 +181,7 @@ const Profil: React.FC = () => {
         })
         setShowModalDenonciation(false);
     }
+
 
     return (
         <IonPage>
@@ -276,7 +266,7 @@ const Profil: React.FC = () => {
                                 <IonLabel>Personne concernée :  </IonLabel>
                                 <IonSelect placeholder="Selectionner un citoyen.." onIonChange={handleInputTarget}>
                                     {citizenList && citizenList.map((citizen: { [x: string]: string; }, index: any) => (
-                                        <IonSelectOption value={citizen["idPerson"]}>{citizen["firstNames"] + " " + citizen["lastName"]}</IonSelectOption>
+                                        <IonSelectOption key={citizen["idPerson"]} value={citizen["idPerson"]}>{citizen["firstNames"] + " " + citizen["lastName"]}</IonSelectOption>
                                     ))}
                                 </IonSelect>
                             </IonItem>
@@ -305,14 +295,6 @@ const Profil: React.FC = () => {
                                         </IonItem>
                                     ))}
                                 </IonList>
-                                <IonInfiniteScroll
-                                    onIonInfinite={(ev) => {
-                                        generateItems();
-                                        setTimeout(() => ev.target.complete(), 500);
-                                    }}
-                                >
-                                    <IonInfiniteScrollContent></IonInfiniteScrollContent>
-                                </IonInfiniteScroll>
                             </IonContent>
                         </IonModal>
 
