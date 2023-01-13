@@ -20,34 +20,94 @@ const Profil: React.FC = () => {
     const [personTarget, setPersonTarget] = useState("");
     const [reason, setReason] = useState("");
     const history = useHistory();
+    var actualCoord: { latitude: number; longitude: number; accuracy: number; altitudeAccuracy: number | null | undefined; altitude: number | null; speed: number | null; heading: number | null; } | null = null;
 
     const token = history.location.state
     var statusResponse = 0;
     const [step, setStepCounter] = useState(0);
+    const [classement, setClassement] = useState(1);
 
-    const printCurrentPosition = async () => {
-        const coordinates = await Geolocation.getCurrentPosition();
+    const setupCoord = async () => {
+        var actualCoord = await (await Geolocation.getCurrentPosition()).coords;
+        while(!actualCoord){
 
-        console.log('Current position:', coordinates);
+        }
+        console.log(actualCoord);
+        fetch('https://intensif06.ensicaen.fr/api/me/localisation', {
+            method: 'POST',
+            headers: { "Authorization": "Bearer " + token , 
+            'Content-type': 'application/json; charset=UTF-8',},
+            body: JSON.stringify({
+                latitude: actualCoord.latitude,
+                longitude: actualCoord.longitude,
+            })
+        }).then(function(response){statusResponse = response.status;})
+        .then(function(data)
+        {
+          if (statusResponse == 201) {
+            console.log("c'est bon la loca");
+          } else {
+            console.log("c'est pas bon la loca");
+          }
+        }).catch(error => console.log(error));
     };
 
     const setupStep = async () => {
         Stepcounter.start(0);
-        setStepCounter(await Stepcounter.getStepCount());
-        console.log(await Stepcounter.getTodayStepCount());
-        console.log(await Stepcounter.deviceCanCountSteps());
+        fetch('https://intensif06.ensicaen.fr/api/me/steps', {
+            method: 'GET',
+            headers: { "Authorization": "Bearer " + token }
+        }).then(function (response) {
+            statusResponse = response.status;
+            return response.json();
+        })
+            .then(function (data) {
+                if (statusResponse == 200) {
+                    setStepCounter(data)
+                }
+        })
     }
 
     const updateStep = async () => {
-        setStepCounter(await Stepcounter.getStepCount());
-        console.log(step);
-        console.log(await Stepcounter.getHistory());
+        var statusResponse = 0;
+        setStepCounter(100 + step);
+        fetch('https://intensif06.ensicaen.fr/api/me/steps', {
+            method: 'POST',
+            body: JSON.stringify({
+                steps:step,
+            }),
+            headers: { "Authorization": "Bearer " + token , 
+            'Content-type': 'application/json; charset=UTF-8',}
+        }).then(function(response){statusResponse = response.status;})
+        .then(function(data)
+        {
+          if (statusResponse == 201) {
+            console.log("c'est bon");
+          } else {
+            console.log("c'est pas bon");
+          }
+        }).catch(error => console.log(error));
+        fetch('https://intensif06.ensicaen.fr/api/me/', {
+            method: 'GET',
+            headers: { "Authorization": "Bearer " + token }
+        }).then(function (response) {
+            statusResponse = response.status;
+            return response.json();
+        })
+            .then(function (data) {
+                if (statusResponse == 200) {
+                    setUserData(data)
+                } else {
+                    history.replace("/home")
+                }
+            })
     }
 
     useEffect(() => {
         printCurrentPosition();
 
         setupStep();
+        setupCoord();     
 
         fetch('https://intensif06.ensicaen.fr/api/me/', {
             method: 'GET',
@@ -75,6 +135,24 @@ const Profil: React.FC = () => {
             })
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    useEffect(() => {
+        citizenList.sort(function compare(a, b) {
+
+            if (a["csse"] < b["csse"])
+                return -1;
+            if (a["csse"] > b["csse"])
+                return 1;
+            return 0;
+        });
+        if (userData) {
+            for (var i = 0; i < citizenList.length; i++) {
+                if (citizenList[i]["idPerson"] === userData["idPerson"]) {
+                    setClassement(i)
+                }
+            }
+        }
+    }, [citizenList])
 
     function handleInputTarget(event: { target: any; }) {
         setPersonTarget(event.target.value);
@@ -148,7 +226,7 @@ const Profil: React.FC = () => {
                                     CSSE : {userData != null ? userData["csse"] : "0"}
                                 </IonCardContent>
                                 <IonCardContent>
-                                    Classement :
+                                    Classement : {classement}
                                 </IonCardContent>
                                 <IonCardContent>
                                     Nombre de pas : {step}
