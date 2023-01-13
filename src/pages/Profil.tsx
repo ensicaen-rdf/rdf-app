@@ -87,6 +87,10 @@ const Profil: React.FC = () => {
             console.log("c'est pas bon");
           }
         }).catch(error => console.log(error));
+        updateCsse();
+    }
+
+    const updateCsse = async () => {
         fetch('https://intensif06.ensicaen.fr/api/me/', {
             method: 'GET',
             headers: { "Authorization": "Bearer " + token }
@@ -104,7 +108,6 @@ const Profil: React.FC = () => {
     }
 
     useEffect(() => {
-        printCurrentPosition();
 
         setupStep();
         setupCoord();     
@@ -140,15 +143,15 @@ const Profil: React.FC = () => {
         citizenList.sort(function compare(a, b) {
 
             if (a["csse"] < b["csse"])
-                return -1;
-            if (a["csse"] > b["csse"])
                 return 1;
+            if (a["csse"] > b["csse"])
+                return -1;
             return 0;
         });
         if (userData) {
             for (var i = 0; i < citizenList.length; i++) {
                 if (citizenList[i]["idPerson"] === userData["idPerson"]) {
-                    setClassement(i)
+                    setClassement(i+1)
                 }
             }
         }
@@ -238,7 +241,7 @@ const Profil: React.FC = () => {
                             onDidDismiss={() => setShowModalOptions(false)} >
                             <div className="modal">
                                 <IonTitle>Options</IonTitle>
-                                <IonButton class="modal-button" onClick={() => setShowModalOptions(false)}>Fermer</IonButton>
+                                <IonButton class="modal-button" onClick={() => {setShowModalOptions(false);}}>Fermer</IonButton>
                             </div>
 
                         </IonModal>
