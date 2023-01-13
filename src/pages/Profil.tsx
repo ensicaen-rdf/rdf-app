@@ -1,4 +1,4 @@
-import { IonAvatar, IonBackButton, IonButton, IonButtons, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonContent, IonFab, IonFabButton, IonFabList, IonHeader, IonIcon, IonInfiniteScroll, IonInfiniteScrollContent, IonInput, IonItem, IonLabel, IonList, IonModal, IonPage, IonTextarea, IonTitle, IonToolbar } from '@ionic/react';
+import { IonAvatar, IonBackButton, IonButton, IonButtons, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonContent, IonFab, IonFabButton, IonFabList, IonHeader, IonIcon, IonInfiniteScroll, IonInfiniteScrollContent, IonInput, IonItem, IonLabel, IonList, IonModal, IonPage, IonSelect, IonSelectOption, IonTextarea, IonTitle, IonToolbar } from '@ionic/react';
 import React, { useEffect, useState } from 'react';
 import { chevronDownCircle, options, alert, logOutOutline } from 'ionicons/icons';
 
@@ -53,11 +53,13 @@ const Profil: React.FC = () => {
         console.log(await Stepcounter.getHistory());
     }
 
+    console.log(userData);
+
     useEffect(() => {
         generateItems();
         printCurrentPosition();
 
-        setupStep();        
+        setupStep();
 
         fetch('https://intensif06.ensicaen.fr/api/me/', {
             method: 'GET',
@@ -95,15 +97,19 @@ const Profil: React.FC = () => {
     }
 
     const report = () => {
-        //marche pas
+        console.log(personTarget, reason)
         fetch('https://intensif06.ensicaen.fr/api/report/', {
             method: 'POST',
-            headers: { "Authorization": "Bearer " + token },
+            headers: {
+                "Authorization": "Bearer " + token,
+                'Content-type': 'application/json; charset=UTF-8',
+            },
             body: JSON.stringify({
                 idPersonTarget: personTarget,
                 reason: reason,
             })
         })
+        setShowModalDenonciation(false);
     }
 
     return (
@@ -123,7 +129,7 @@ const Profil: React.FC = () => {
                         <IonIcon icon={chevronDownCircle}></IonIcon>
                     </IonFabButton>
                     <IonFabList side="bottom">
-                        <IonFabButton onClick={() => {setShowModalOptions(true); updateStep()}}>
+                        <IonFabButton onClick={() => { setShowModalOptions(true); updateStep() }}>
                             <IonIcon icon={options}></IonIcon>
                         </IonFabButton>
                         <IonFabButton onClick={() => setShowModalDenonciation(true)}>
@@ -150,10 +156,10 @@ const Profil: React.FC = () => {
                         <IonCardContent>
                             <IonCard>
                                 <IonCardContent>
-                                    CSSE : 234
+                                    CSSE : {userData != null ? userData["csse"] : "0"}
                                 </IonCardContent>
                                 <IonCardContent>
-                                    Classement : 5231
+                                    Classement :
                                 </IonCardContent>
                                 <IonCardContent>
                                     Nombre de pas : {step}
@@ -187,7 +193,11 @@ const Profil: React.FC = () => {
                             </div>
                             <IonItem>
                                 <IonLabel>Personne concernée :  </IonLabel>
-                                <IonInput placeholder="Personne concernée..." onIonChange={handleInputTarget}></IonInput>
+                                <IonSelect placeholder="Selectionner un citoyen.." onIonChange={handleInputTarget}>
+                                    {citizenList && citizenList.map((citizen: { [x: string]: string; }, index: any) => (
+                                        <IonSelectOption value={citizen["idPerson"]}>{citizen["firstNames"] + " " + citizen["lastName"]}</IonSelectOption>
+                                    ))}
+                                </IonSelect>
                             </IonItem>
                             <IonItem>
                                 <IonLabel>Motif de la plainte :  </IonLabel>
