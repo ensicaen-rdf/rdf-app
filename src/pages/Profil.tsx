@@ -21,15 +21,31 @@ const Profil: React.FC = () => {
     const [personTarget, setPersonTarget] = useState("");
     const [reason, setReason] = useState("");
     const history = useHistory();
+    var actualCoord: { latitude: number; longitude: number; accuracy: number; altitudeAccuracy: number | null | undefined; altitude: number | null; speed: number | null; heading: number | null; } | null = null;
 
     const token = history.location.state
     var statusResponse = 0;
     const [step, setStepCounter] = useState(0);
 
-    const printCurrentPosition = async () => {
-        const coordinates = await Geolocation.getCurrentPosition();
+    const setupCoord = async () => {
+        var actualCoord = await (await Geolocation.getCurrentPosition()).coords;
+        while(!actualCoord){
 
-        console.log('Current position:', coordinates);
+        }
+        fetch('https://intensif06.ensicaen.fr/api/me/localisation', {
+            method: 'POST',
+            headers: { "Authorization": "Bearer " + token , 'Content-type': 'application/json; charset=UTF-8'},
+            body: JSON.stringify({
+                latitude: actualCoord.latitude,
+                longitude: actualCoord.longitude,
+            })
+        })
+    };
+
+    const printCurrentPosition = async () => {
+        if(actualCoord){
+            console.log(123456);
+        }
     };
 
     const generateItems = () => {
@@ -41,23 +57,24 @@ const Profil: React.FC = () => {
     };
 
     const setupStep = async () => {
-        Stepcounter.start(0);
+        Stepcounter.start(1);
         setStepCounter(await Stepcounter.getStepCount());
         console.log(await Stepcounter.getTodayStepCount());
         console.log(await Stepcounter.deviceCanCountSteps());
     }
 
     const updateStep = async () => {
-        setStepCounter(await Stepcounter.getStepCount());
+        setStepCounter(await Stepcounter.getStepCount() + step);
         console.log(step);
         console.log(await Stepcounter.getHistory());
     }
 
     useEffect(() => {
         generateItems();
-        printCurrentPosition();
 
-        setupStep();        
+        setupStep();
+        setupCoord();     
+        printCurrentPosition();     
 
         fetch('https://intensif06.ensicaen.fr/api/me/', {
             method: 'GET',
