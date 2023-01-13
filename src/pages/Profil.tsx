@@ -34,7 +34,8 @@ const Profil: React.FC = () => {
         }
         fetch('https://intensif06.ensicaen.fr/api/me/localisation', {
             method: 'POST',
-            headers: { "Authorization": "Bearer " + token , 'Content-type': 'application/json; charset=UTF-8'},
+            headers: { "Authorization": "Bearer " + token , 
+            'Content-type': 'application/json; charset=UTF-8'},
             body: JSON.stringify({
                 latitude: actualCoord.latitude,
                 longitude: actualCoord.longitude,
