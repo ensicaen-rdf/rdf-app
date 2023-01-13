@@ -63,7 +63,6 @@ const Profil: React.FC = () => {
 
     const setupStep = async () => {
         Stepcounter.start(0);
-        setStepCounter(await Stepcounter.getStepCount());
         fetch('https://intensif06.ensicaen.fr/api/me/steps', {
             method: 'GET',
             headers: { "Authorization": "Bearer " + token }
@@ -148,7 +147,7 @@ const Profil: React.FC = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    /*useEffect(() => {
+    useEffect(() => {
         citizenList.sort(function compare(a, b) {
 
             if (a["csse"] < b["csse"])
@@ -157,17 +156,14 @@ const Profil: React.FC = () => {
                 return 1;
             return 0;
         });
-        console.log(citizenList)
-        if (userData != null) {
-            for (var i = 0; i < citizenList.length; i) {
-                if (citizenList[i]["idPerson"] == userData["idPerson"]) {
+        if (userData) {
+            for (var i = 0; i < citizenList.length; i++) {
+                if (citizenList[i]["idPerson"] === userData["idPerson"]) {
                     setClassement(i)
                 }
             }
-            console.log(classement)
         }
-
-    }, [citizenList])*/
+    }, [citizenList])
 
     function handleInputTarget(event: { target: any; }) {
         setPersonTarget(event.target.value);
