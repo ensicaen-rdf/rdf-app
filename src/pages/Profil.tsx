@@ -108,7 +108,6 @@ const Profil: React.FC = () => {
     }
 
     useEffect(() => {
-        printCurrentPosition();
 
         setupStep();
         setupCoord();     
